@@ -5,7 +5,7 @@ import { useFormik } from 'formik'
 import { Button, Form, FloatingLabel } from 'react-bootstrap'
 import { useLocation, useNavigate } from 'react-router-dom'
 import useAuth from '../hooks/index.jsx'
-import getRoutes from '../routes.js'
+import getPath from '../path.js'
 
 const LoginPage = () => {
   const auth = useAuth()
@@ -28,10 +28,9 @@ const LoginPage = () => {
       setAuthFailed(false)
 
       try {
-        const res = await axios.post(getRoutes.loginPath(), values)
+        const res = await axios.post(getPath.loginPath(), values)
         localStorage.setItem('userId', JSON.stringify(res.data))
-        console.log(auth)
-        // auth.logIn(res.data)
+        auth.login(res.data)
         const { from } = location.state || { from: { pathname: '/' } }
         navigate(from)
       }
