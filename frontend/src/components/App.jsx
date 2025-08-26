@@ -1,20 +1,47 @@
-import { StrictMode } from 'react'
+import { StrictMode, useCallback, useMemo } from 'react'
 import { RouterProvider } from 'react-router-dom'
 import { useState } from 'react'
-import router from './components/Routes.jsx'
+import router from './Routes.jsx'
 import AuthContext from '../contexts/index.jsx'
 
 const AuthProvider = ({ children }) => {
-  const [loggedIn, setLoggedIn] = useState(false)
+  const getUser = JSON.parse(localStorage.getItem('userId'))
+  const [loggedin, setLoggedin] = useState(getUser ? true : false)
+  const [user, setUser] = useState(getUser?.username)
 
-  const logIn = () => setLoggedIn(true)
-  const logOut = () => {
+  const login = useCallback((userData) => {
+    setLoggedin(true)
+    setUser(userData.username)
+  }, [])
+
+  const logout = useCallback(() => {
     localStorage.removeItem('userId')
-    setLoggedIn(false)
-  }
+    setUser(null)
+    setLoggedin(false)
+  }, [])
+
+  const getAuth = useCallback(() => {
+    const userId = JSON.parse(localStorage.getItem('userId'))
+    if (userId && userId.token) {
+      return { Authorization: `Bearer ${userId.token}` }
+    }
+    logout()
+    return {}
+  }, [logout])
+
+  const valueData = useMemo(
+    () => ({
+      loggedin,
+      login,
+      logout,
+      getAuth,
+      user,
+    }),
+    [loggedin, login, logout, getAuth, user],
+  )
 
   return (
-    <AuthContext.Provider value={{ loggedIn, logIn, logOut }}>
+    <AuthContext.Provider value={valueData}>
       {children}
     </AuthContext.Provider>
   )
