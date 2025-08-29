@@ -20,10 +20,10 @@ const AuthProvider = ({ children }) => {
     setLoggedin(false)
   }, [])
 
-  const getAuth = useCallback(() => {
+  const getToken = useCallback(() => {
     const userId = JSON.parse(localStorage.getItem('userId'))
     if (userId && userId.token) {
-      return { Authorization: `Bearer ${userId.token}` }
+      return userId.token
     }
     logout()
     return {}
@@ -34,10 +34,10 @@ const AuthProvider = ({ children }) => {
       loggedin,
       login,
       logout,
-      getAuth,
+      getToken,
       user,
     }),
-    [loggedin, login, logout, getAuth, user],
+    [loggedin, login, logout, getToken, user],
   )
 
   return (
