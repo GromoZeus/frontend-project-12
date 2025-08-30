@@ -77,22 +77,22 @@ export const { actions } = slice
 
 // Селекторы адаптера
 export const channelsSelectors = channelsAdapter.getSelectors(
-  state => state.channelsInfo,
+  state => state.channelsState,
 )
 
 // Кастомные селекторы
-export const selectAllChannels = state => channelsSelectors.selectAll(state)
-export const selectChannelById = (state, id) => channelsSelectors.selectById(state, id)
-export const selectChannelsEntities = state => channelsSelectors.selectEntities(state)
-export const selectChannelsIds = state => channelsSelectors.selectIds(state)
-export const selectChannelsTotal = state => channelsSelectors.selectTotal(state)
+// export const selectAllChannels = state => channelsSelectors.selectAll(state)
+// export const selectChannelById = (state, id) => channelsSelectors.selectById(state, id)
+// export const selectChannelsEntities = state => channelsSelectors.selectEntities(state)
+// export const selectChannelsIds = state => channelsSelectors.selectIds(state)
+// export const selectChannelsTotal = state => channelsSelectors.selectTotal(state)
 
-export const selectCurrentChannelId = state => state.channelsInfo.currentChannelId
-export const selectCurrentChannel = (state) => {
-  const currentId = selectCurrentChannelId(state)
-  return currentId ? selectChannelById(state, currentId) : null
-}
-export const selectChannelsLoading = state => state.channelsInfo.loading
-export const selectNewChannelId = state => state.channelsInfo.newChannelId
+// export const selectCurrentChannelId = state => state.channelsState.currentChannelId
+// export const selectCurrentChannel = (state) => {
+//   const currentId = selectCurrentChannelId(state)
+//   return currentId ? selectChannelById(state, currentId) : null
+// }
+export const selectChannelsLoading = state => state.channelsState.loading
+// export const selectNewChannelId = state => state.channelsState.newChannelId
 
 export default slice.reducer

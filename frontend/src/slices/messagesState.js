@@ -62,7 +62,7 @@ export const { actions } = slice
 
 // Селекторы адаптера
 export const messagesSelectors = messagesAdapter.getSelectors(
-  state => state.messagesInfo,
+  state => state.messagesState,
 )
 
 // Кастомные селекторы
