@@ -1,7 +1,9 @@
 import { StrictMode, useCallback, useMemo } from 'react'
 import { RouterProvider } from 'react-router-dom'
 import { useState } from 'react'
+import { Provider } from 'react-redux'
 import router from './Routes.jsx'
+import store from '../slices/index.js'
 import AuthContext from '../contexts/index.jsx'
 
 const AuthProvider = ({ children }) => {
@@ -50,9 +52,11 @@ const AuthProvider = ({ children }) => {
 const App = () => {
   return (
     <StrictMode>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
+      <Provider store={store}>
+        <AuthProvider>
+          <RouterProvider router={router} />
+        </AuthProvider>
+      </Provider>
     </StrictMode>
   )
 }
