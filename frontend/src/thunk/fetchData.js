@@ -3,14 +3,21 @@ import axios from 'axios'
 import getPath from '../path.js'
 
 const channelsData = createAsyncThunk(
-  'channelsState/setState',
+  'initState/setState',
   async (token, { rejectWithValue }) => {
     try {
-      const response = await axios.get(getPath.channelsPath(), { headers: { Authorization: `Bearer ${token}` } })
-      return response.data
+      const [channelsResponse, messagesResponse] = await Promise.all([
+        axios.get(getPath.channelsPath(), { headers: { Authorization: `Bearer ${token}` } }),
+        axios.get(getPath.messagesPath(), { headers: { Authorization: `Bearer ${token}` } }),
+      ])
+
+      return {
+        channels: channelsResponse.data,
+        messages: messagesResponse.data,
+      }
     }
     catch (error) {
-      return rejectWithValue(error.response.data)
+      return rejectWithValue(error.response?.data || error.message)
     }
   },
 )
