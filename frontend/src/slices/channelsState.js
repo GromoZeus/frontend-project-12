@@ -61,9 +61,10 @@ const slice = createSlice({
       })
       .addCase(channelsData.fulfilled, (state, { payload }) => {
         state.loading = false
-        // Устанавливаем все каналы из payload
+        // Просто устанавливаем массив каналов
         channelsAdapter.setAll(state, payload.channels)
-        state.currentChannelId = payload.currentChannelId
+        // Устанавливаем первый канал как текущий по умолчанию
+        state.currentChannelId = payload.channels?.currentChannelId || defaultCurrentChannelId
         state.newChannelId = null
       })
       .addCase(channelsData.rejected, (state) => {
@@ -81,7 +82,7 @@ export const channelsSelectors = channelsAdapter.getSelectors(
 )
 
 // Кастомные селекторы
-// export const selectAllChannels = state => channelsSelectors.selectAll(state)
+export const selectAllChannels = state => channelsSelectors.selectAll(state)
 // export const selectChannelById = (state, id) => channelsSelectors.selectById(state, id)
 // export const selectChannelsEntities = state => channelsSelectors.selectEntities(state)
 // export const selectChannelsIds = state => channelsSelectors.selectIds(state)

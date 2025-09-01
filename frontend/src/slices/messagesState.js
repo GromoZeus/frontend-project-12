@@ -11,7 +11,7 @@ const messagesAdapter = createEntityAdapter({
 })
 
 const slice = createSlice({
-  name: 'messagesInfo',
+  name: 'messagesState',
   initialState: messagesAdapter.getInitialState(),
   reducers: {
     addMessage: {
@@ -66,22 +66,22 @@ export const messagesSelectors = messagesAdapter.getSelectors(
 )
 
 // Кастомные селекторы
-export const selectAllMessages = state => messagesSelectors.selectAll(state)
-export const selectMessageById = (state, id) => messagesSelectors.selectById(state, id)
-export const selectMessagesEntities = state => messagesSelectors.selectEntities(state)
-export const selectMessagesIds = state => messagesSelectors.selectIds(state)
-export const selectMessagesTotal = state => messagesSelectors.selectTotal(state)
+// export const selectAllMessages = state => messagesSelectors.selectAll(state)
+// export const selectMessageById = (state, id) => messagesSelectors.selectById(state, id)
+// export const selectMessagesEntities = state => messagesSelectors.selectEntities(state)
+// export const selectMessagesIds = state => messagesSelectors.selectIds(state)
+// export const selectMessagesTotal = state => messagesSelectors.selectTotal(state)
 
 // Селектор для получения сообщений по channelId
-export const selectMessagesByChannelId = (state, channelId) => {
-  const allMessages = selectAllMessages(state)
-  return allMessages.filter(message => message.channelId === channelId)
-}
+// export const selectMessagesByChannelId = (state, channelId) => {
+//   const allMessages = selectAllMessages(state)
+//   return allMessages.filter(message => message.channelId === channelId)
+// }
 
 // Селектор для получения количества сообщений в канале
-export const selectMessagesCountByChannelId = (state, channelId) => {
-  const messages = selectMessagesByChannelId(state, channelId)
-  return messages.length
-}
+// export const selectMessagesCountByChannelId = (state, channelId) => {
+//   const messages = selectMessagesByChannelId(state, channelId)
+//   return messages.length
+// }
 
 export default slice.reducer
