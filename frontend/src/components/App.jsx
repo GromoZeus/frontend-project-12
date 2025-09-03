@@ -1,10 +1,127 @@
 import { StrictMode, useCallback, useMemo } from 'react'
 import { RouterProvider } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Provider } from 'react-redux'
+import { io } from 'socket.io-client'
+import axios from 'axios'
 import router from './Routes.jsx'
-import store from '../slices/index.js'
-import AuthContext from '../contexts/index.jsx'
+import store, { actions } from '../slices/index.js'
+import { AuthContext, ChatContext } from '../contexts/index.jsx'
+import { useAuth } from '../hooks/index.jsx'
+import getPath from '../path.js'
+
+const ChatProvider = ({ children }) => {
+  const auth = useAuth()
+  const {
+    addMessage,
+    addChannel,
+    deleteChannel,
+    channelRename,
+  } = actions
+  const { dispatch } = store
+
+  const socket = useMemo(() => io({
+    transports: ['websocket'],
+    autoConnect: true,
+  }), [])
+
+  useEffect(() => {
+    // Подписываемся на события
+    socket.on('connect', () => {
+      console.log('Connected to server')
+    })
+
+    socket.on('newMessage', (payload) => {
+      dispatch(addMessage(payload))
+    })
+
+    socket.on('newChannel', (payload) => {
+      dispatch(addChannel(payload))
+    })
+
+    socket.on('removeChannel', (payload) => {
+      dispatch(deleteChannel(payload))
+    })
+
+    socket.on('renameChannel', (payload) => {
+      dispatch(channelRename(payload))
+    })
+
+    // Очистка при размонтировании
+    return () => {
+      socket.off('newMessage')
+      socket.off('newChannel')
+      socket.off('removeChannel')
+      socket.off('renameChannel')
+      socket.disconnect()
+    }
+  }, [socket, dispatch, addMessage, addChannel, deleteChannel, channelRename])
+
+  const chatApi = {
+    sendMessage: async (message) => {
+      try {
+        const response = await axios.post(getPath.messagesPath(), message, {
+          headers: {
+            Authorization: `Bearer ${auth.getToken()}`,
+          },
+        })
+        return response.data
+      }
+      catch (error) {
+        console.error('Request failed:', error)
+        throw error
+      }
+    },
+    newChannel: async (name) => {
+      try {
+        const response = await axios.post(getPath.channelsPath(), name, {
+          headers: {
+            Authorization: `Bearer ${auth.getToken()}`,
+          },
+        })
+        return response.data
+      }
+      catch (error) {
+        console.error('Request failed:', error)
+        throw error
+      }
+    },
+    removeChannel: async (id) => {
+      try {
+        const response = await axios.delete([getPath.channelsPath(), id].join('/'), {
+          headers: {
+            Authorization: `Bearer ${auth.getToken()}`,
+          },
+        })
+        return response.data
+      }
+      catch (error) {
+        console.error('Request failed:', error)
+        throw error
+      }
+    },
+    renameChannel: async ({ name, id }) => {
+      try {
+        const response = await axios.patch([getPath.channelsPath(), id].join('/'), name, {
+          headers: {
+            Authorization: `Bearer ${auth.getToken()}`,
+          },
+        })
+        return response.data
+      }
+      catch (error) {
+        console.error('Request failed:', error)
+        throw error
+      }
+    },
+  }
+
+  return (
+    <ChatContext.Provider value={chatApi}>
+      {children}
+    </ChatContext.Provider>
+  )
+}
 
 const AuthProvider = ({ children }) => {
   const getUser = JSON.parse(localStorage.getItem('userId'))
@@ -54,7 +171,9 @@ const App = () => {
     <StrictMode>
       <Provider store={store}>
         <AuthProvider>
-          <RouterProvider router={router} />
+          <ChatProvider>
+            <RouterProvider router={router} />
+          </ChatProvider>
         </AuthProvider>
       </Provider>
     </StrictMode>
