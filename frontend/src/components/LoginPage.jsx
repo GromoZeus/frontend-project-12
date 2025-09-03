@@ -6,7 +6,7 @@ import { useFormik } from 'formik'
 import { Button, Form, FloatingLabel } from 'react-bootstrap'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { actions } from '../slices/index.js'
-import useAuth from '../hooks/index.jsx'
+import { useAuth } from '../hooks/index.jsx'
 import getPath from '../path.js'
 
 const LoginPage = () => {
