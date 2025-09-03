@@ -1,10 +1,7 @@
 import { useContext } from 'react'
-import AuthContext from '../contexts/index.jsx'
+import { AuthContext, ChatContext } from '../contexts/index.jsx'
 
-export const useAuth = () => {
-  const context = useContext(AuthContext)
+const useAuth = () => useContext(AuthContext)
+const useChat = () => useContext(ChatContext)
 
-  return context
-}
-
-export default useAuth
+export { useAuth, useChat }
