@@ -1,0 +1,86 @@
+import React, { useRef, useEffect } from 'react'
+import { Form, Button } from 'react-bootstrap'
+import { useFormik } from 'formik'
+// import leoProfanity from 'leo-profanity'
+// import * as yup from 'yup'
+// import { ArrowRightSquare } from 'react-bootstrap-icons'
+// import { useTranslation } from 'react-i18next'
+// import { toast } from 'react-toastify'
+
+import { useAuth, useChat } from '../../hooks/index.jsx'
+
+const MessageForm = ({ activeChannel }) => {
+  const { user } = useAuth()
+  const chatApi = useChat()
+  const messageRef = useRef(null)
+  // const { t } = useTranslation()
+
+  // const validationSchema = yup.object().shape({
+  //   message: yup.string().trim().required('Required'),
+  // })
+
+  useEffect(() => {
+    messageRef.current.focus()
+  }, [activeChannel])
+
+  const formik = useFormik({
+    initialValues: {
+      body: '',
+    },
+    onSubmit: async (values, { resetForm }) => {
+      if (!values.body.trim()) return // Проверка на пустое сообщение
+
+      const message = {
+        text: values.body.trim(),
+        channelId: activeChannel.id,
+        username: user,
+      }
+
+      try {
+        console.log('Отправляем сообщение:', message)
+        await chatApi.sendMessage(message)
+        resetForm()
+        messageRef.current.focus() // Фокус после отправки
+      }
+      catch (error) {
+        console.error('Ошибка отправки сообщения:', error)
+      }
+    },
+    // validateOnChange: validationSchema,
+  })
+
+  return (
+    <div className="mt-auto px-5 py-3">
+      <Form
+        noValidate
+        className="py-1 border rounded-2"
+        onSubmit={formik.handleSubmit}
+      >
+        <Form.Group className="input-group">
+          <Form.Control
+            name="body"
+            ref={messageRef}
+            aria-label="newMessage"
+            placeholder="messageFormPlaceholder"
+            className="border-0 p-0 ps-2"
+            value={formik.values.body}
+            onChange={formik.handleChange}
+            id="body"
+          />
+          <Button
+            style={{ border: 'none' }}
+            variant="group-vertical"
+            type="submit"
+            disabled={formik.isSubmitting || !formik.values.body}
+            onClick={formik.handleSubmit}
+          >
+            {/* <ArrowRightSquare size={20} /> */}
+            <span className="visually-show"> send </span>
+          </Button>
+        </Form.Group>
+      </Form>
+    </div>
+  )
+}
+
+export default MessageForm
