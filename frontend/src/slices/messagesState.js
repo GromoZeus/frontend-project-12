@@ -68,7 +68,7 @@ export const messagesSelectors = messagesAdapter.getSelectors(
 // Кастомные селекторы
 // export const selectAllMessages = state => messagesSelectors.selectAll(state)
 // export const selectMessageById = (state, id) => messagesSelectors.selectById(state, id)
-// export const selectMessagesEntities = state => messagesSelectors.selectEntities(state)
+export const selectMessagesEntities = state => messagesSelectors.selectEntities(state)
 // export const selectMessagesIds = state => messagesSelectors.selectIds(state)
 // export const selectMessagesTotal = state => messagesSelectors.selectTotal(state)
 

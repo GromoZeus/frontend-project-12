@@ -7,7 +7,7 @@ const channelsAdapter = createEntityAdapter({
   sortComparer: (a, b) => a.id - b.id, // сортировка по ID
 })
 
-const defaultCurrentChannelId = 1
+const defaultCurrentChannelId = '1'
 
 const slice = createSlice({
   name: 'channelsState',
@@ -84,11 +84,11 @@ export const channelsSelectors = channelsAdapter.getSelectors(
 // Кастомные селекторы
 export const selectAllChannels = state => channelsSelectors.selectAll(state)
 // export const selectChannelById = (state, id) => channelsSelectors.selectById(state, id)
-// export const selectChannelsEntities = state => channelsSelectors.selectEntities(state)
+export const selectChannelsEntities = state => channelsSelectors.selectEntities(state)
 // export const selectChannelsIds = state => channelsSelectors.selectIds(state)
 // export const selectChannelsTotal = state => channelsSelectors.selectTotal(state)
 
-// export const selectCurrentChannelId = state => state.channelsState.currentChannelId
+export const selectCurrentChannelId = state => state.channelsState.currentChannelId
 // export const selectCurrentChannel = (state) => {
 //   const currentId = selectCurrentChannelId(state)
 //   return currentId ? selectChannelById(state, currentId) : null
