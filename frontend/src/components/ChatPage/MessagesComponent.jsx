@@ -1,24 +1,25 @@
 import React, { useEffect, useRef, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { selectChannelsEntities, selectCurrentChannelId } from '../../slices/channelsState.js'
+import { selectChannelsEntities } from '../../slices/channelsState.js'
+import { selectCurrentChannelId } from '../../slices/UIState.js'
 import { selectMessagesEntities } from '../../slices/messagesState.js'
 import MessageForm from './MessageForm.jsx'
 import MessagesHeader from './MessageHeader.jsx'
 import Message from './Message.jsx'
 
 const MessagesComponent = () => {
-  const channels = useSelector(selectChannelsEntities)
-  const messages = useSelector(selectMessagesEntities)
+  const allChannels = useSelector(selectChannelsEntities)
+  const allMessages = useSelector(selectMessagesEntities)
   const currentChannelId = useSelector(selectCurrentChannelId)
 
   const activeChannel = useMemo(() =>
-    Object.values(channels).find(({ id }) => id === currentChannelId),
-  [channels, currentChannelId])
+    Object.values(allChannels).find(({ id }) => id === currentChannelId),
+  [allChannels, currentChannelId])
 
   const activeChannelMessages = useMemo(() =>
-    Object.values(messages).filter(message => message.channelId === currentChannelId),
-  [messages, currentChannelId])
+    Object.values(allMessages).filter(message => message.channelId === currentChannelId),
+  [allMessages, currentChannelId])
 
   const messagesView = useRef(null)
   useEffect(() => {

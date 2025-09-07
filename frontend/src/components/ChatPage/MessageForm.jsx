@@ -7,7 +7,7 @@ import { useFormik } from 'formik'
 // import { useTranslation } from 'react-i18next'
 // import { toast } from 'react-toastify'
 
-import { useAuth, useChat } from '../../hooks/index.jsx'
+import { useAuth, useChat } from '../../hooks/index.js'
 
 const MessageForm = ({ activeChannel }) => {
   const { user } = useAuth()
@@ -28,7 +28,7 @@ const MessageForm = ({ activeChannel }) => {
       body: '',
     },
     onSubmit: async (values, { resetForm }) => {
-      if (!values.body.trim()) return // Проверка на пустое сообщение
+      if (!values.body.trim()) return
 
       const message = {
         text: values.body.trim(),
@@ -40,7 +40,7 @@ const MessageForm = ({ activeChannel }) => {
         console.log('Отправляем сообщение:', message)
         await chatApi.sendMessage(message)
         resetForm()
-        messageRef.current.focus() // Фокус после отправки
+        messageRef.current.focus()
       }
       catch (error) {
         console.error('Ошибка отправки сообщения:', error)

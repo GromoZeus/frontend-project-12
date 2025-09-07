@@ -4,10 +4,9 @@ import { Container } from 'react-bootstrap'
 // import { toast } from 'react-toastify';
 
 import fetchData from '../../thunk/fetchData.js'
-import { useAuth } from '../../hooks/index.jsx'
+import { useAuth } from '../../hooks/index.js'
 import { selectChannelsLoading } from '../../slices/channelsState.js'
-// import ChannelsComponent from './channels/ChannelsComponent.jsx';
-// import MessagesComponent from './messages/MessagesComponent.jsx';
+import ChannelComponent from './ChannelsComponent.jsx'
 import MessagesComponent from './MessagesComponent.jsx'
 
 const ChatPage = () => {
@@ -41,6 +40,7 @@ const ChatPage = () => {
   return (
     <Container className="h-100 my-4 overflow-hidden rounded shadow">
       <div className="row h-100 bg-white flex-md-row">
+        <ChannelComponent />
         <MessagesComponent />
       </div>
     </Container>
