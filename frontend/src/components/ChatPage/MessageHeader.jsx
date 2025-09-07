@@ -1,8 +1,8 @@
 import React from 'react'
-// import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 const MessagesHeader = ({ activeChannel, messagesCount }) => {
-  // const { t } = useTranslation()
+  const { t } = useTranslation()
 
   return (
     <div className="bg-light mb-4 p-3 shadow-sm small">
@@ -14,7 +14,7 @@ const MessagesHeader = ({ activeChannel, messagesCount }) => {
         </b>
       </p>
       <span className="text-muted">
-        {`'messages', ${messagesCount}`}
+        {t('messages', { count: messagesCount })}
       </span>
     </div>
   )

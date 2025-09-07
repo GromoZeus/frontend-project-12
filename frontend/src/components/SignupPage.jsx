@@ -3,17 +3,17 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 import axios from 'axios'
 import { Card, Col, Container, Form, FormControl, FormGroup, FormLabel, Row, Button } from 'react-bootstrap'
-// import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { useNavigate, useLocation } from 'react-router-dom'
 
-// import ImageSignUp from '../assets/avatar_1.jpg'
+import ImageSignUp from '../assets/authavatar.jpg'
 import getPath from '../path.js'
 import { useAuth } from '../hooks/index.js'
 
 const SignupPage = () => {
   const [failedRegistration, setFailedRegistration] = useState(false)
   const [submited, setSubmited] = useState(false)
-  // const { t } = useTranslation()
+  const { t } = useTranslation()
   const usernameRef = useRef(null)
   const navigate = useNavigate()
   const location = useLocation()
@@ -25,47 +25,25 @@ const SignupPage = () => {
   const registrationValidation = yup.object().shape({
     username: yup
       .string()
-      .min(3, 'Minimum 3 characters')
-      .max(20, 'Maximum 20 characters')
+      .min(3, t('signUpPage.minUsernameLenght'))
+      .max(20, t('signUpPage.maxUsernameLenght'))
       .trim()
-      .typeError('Required')
-      .required('Required'),
+      .typeError(t('required'))
+      .required(t('required')),
     password: yup
       .string()
       .trim()
-      .min(6, 'Minimum 6 characters')
-      .typeError('Required')
-      .required('Required'),
+      .min(6, t('signUpPage.minPasswordLenght'))
+      .typeError(t('required'))
+      .required(t('required')),
     confirmPassword: yup
       .string()
       .test(
         'confirmPassword',
-        'Passwords must match',
+        t('signUpPage.confirmPassword'),
         (password, context) => password === context.parent.password,
       ),
   })
-  // const registrationValidation = yup.object().shape({
-  //   username: yup
-  //     .string()
-  //     .min(3, t('signUpPage.minUsernameLenght'))
-  //     .max(20, t('signUpPage.maxUsernameLenght'))
-  //     .trim()
-  //     .typeError(t('required'))
-  //     .required(t('required')),
-  //   password: yup
-  //     .string()
-  //     .trim()
-  //     .min(6, t('signUpPage.minPasswordLenght'))
-  //     .typeError(t('required'))
-  //     .required(t('required')),
-  //   confirmPassword: yup
-  //     .string()
-  //     .test(
-  //       'confirmPassword',
-  //       t('signUpPage.confirmPassword'),
-  //       (password, context) => password === context.parent.password,
-  //     ),
-  // })
 
   const formik = useFormik({
     initialValues: {
@@ -104,21 +82,16 @@ const SignupPage = () => {
           <Card className="shadow-sm">
             <Card.Body className="d-flex flex-column flex-md-row justify-content-around align-items-center p-5">
               <div>
-                {/* <img
-                  src={ImageSignUp}
-                  className="rounded-circle"
-                  alt="Registratiion Avatar"
-                /> */}
+                <img src={ImageSignUp} className="rounded-circle" alt="Registratiion Avatar" />
               </div>
               <Form className="w-50">
-                <h1 className="text-center mb-4">signUp</h1>
+                <h1 className="text-center mb-4">{t('signUp')}</h1>
                 <FormGroup className="form-floating mb-3">
                   <FormControl
                     id="username"
                     name="username"
                     ref={usernameRef}
-                    // placeholder={t('signUpPage.username')}
-                    placeholder="signUpPage.username"
+                    placeholder={t('signUpPage.username')}
                     value={formik.values.username}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -129,7 +102,7 @@ const SignupPage = () => {
                     }
                   />
                   <FormLabel htmlFor="username">
-                    signUpPage.username
+                    {t('signUpPage.username')}
                   </FormLabel>
                   <Form.Control.Feedback
                     type="invalid"
@@ -143,8 +116,7 @@ const SignupPage = () => {
                     type="password"
                     id="password"
                     name="password"
-                    // placeholder={t('signUpPage.minPasswordLenght')}
-                    placeholder="signUpPage.minPasswordLenght"
+                    placeholder={t('signUpPage.minPasswordLenght')}
                     value={formik.values.password}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -154,7 +126,7 @@ const SignupPage = () => {
                       || failedRegistration
                     }
                   />
-                  <FormLabel htmlFor="password">password</FormLabel>
+                  <FormLabel htmlFor="password">{t('password')}</FormLabel>
                   <Form.Control.Feedback
                     type="invalid"
                     className="invalid-feedback"
@@ -167,7 +139,7 @@ const SignupPage = () => {
                     type="password"
                     id="confirmPassword"
                     name="confirmPassword"
-                    placeholder="signUpPage.minPasswordLenght"
+                    placeholder={t('signUpPage.minPasswordLenght')}
                     value={formik.values.confirmPassword}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -178,7 +150,7 @@ const SignupPage = () => {
                       || failedRegistration
                     }
                   />
-                  <FormLabel htmlFor="confirmPassword">signUpPage.repeatPassword</FormLabel>
+                  <FormLabel htmlFor="confirmPassword">{t('signUpPage.repeatPassword')}</FormLabel>
                   <Form.Control.Feedback
                     type="invalid"
                     className="invalid-feedback"
@@ -193,7 +165,7 @@ const SignupPage = () => {
                   variant="outline-primary"
                   onClick={formik.handleSubmit}
                 >
-                  signUpPage.signUp
+                  {t('signUpPage.signUp')}
                 </Button>
               </Form>
             </Card.Body>

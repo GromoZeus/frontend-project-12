@@ -4,34 +4,25 @@ import { useFormik } from 'formik'
 import { Modal, FormGroup, FormControl, FormLabel, Button, Form } from 'react-bootstrap'
 import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux'
-// import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 // import { toast } from 'react-toastify'
 
 import { useChat } from '../../hooks/index.js'
 import { actions } from '../../slices/index.js'
 import { selectChannelsEntities } from '../../slices/channelsState.js'
 
-// const validationChannelsSchema = (channels, text) => yup.object().shape({
-//   name: yup
-//     .string()
-//     .trim()
-//     .required(text('required'))
-//     .min(3, text('min'))
-//     .max(20, text('max'))
-//     .notOneOf(channels, text('duplicate')),
-// })
-const validationChannelsSchema = channels => yup.object().shape({ //        УДАЛИТЬ
+const validationChannelsSchema = (channels, text) => yup.object().shape({
   name: yup
     .string()
     .trim()
-    .required('Required')
-    .min(3, 'Must be at least 3 characters')
-    .max(20, 'Must be no more than 20 characters')
-    .notOneOf(channels, 'Must be unique'),
+    .required(text('required'))
+    .min(3, text('min'))
+    .max(20, text('max'))
+    .notOneOf(channels, text('duplicate')),
 })
 
 const ModalAddChannel = ({ closeHandler }) => {
-  // const { t } = useTranslation()
+  const { t } = useTranslation()
   const allChannels = useSelector(selectChannelsEntities)
   const chatApi = useChat()
   const channelsName = Object.values(allChannels).map(channel => channel.name)
@@ -48,8 +39,7 @@ const ModalAddChannel = ({ closeHandler }) => {
     initialValues: {
       name: '',
     },
-    // validationSchema: validationChannelsSchema(channelsName, t),
-    validationSchema: validationChannelsSchema(channelsName), //        УДАЛИТЬ
+    validationSchema: validationChannelsSchema(channelsName, t),
     onSubmit: async (values) => {
       const { name } = values
       // const cleanedName = leoProfanity.clean(name)
@@ -69,7 +59,7 @@ const ModalAddChannel = ({ closeHandler }) => {
   return (
     <>
       <Modal.Header closeButton={closeHandler}>
-        <Modal.Title>modals.addChannel</Modal.Title>
+        <Modal.Title>{t('modals.addChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={formik.handleSubmit}>
@@ -84,13 +74,13 @@ const ModalAddChannel = ({ closeHandler }) => {
               value={formik.values.name}
               isInvalid={!!formik.errors.name}
             />
-            <FormLabel htmlFor="name" className="visually-hidden">modals.nameChannel</FormLabel>
+            <FormLabel htmlFor="name" className="visually-hidden">{t('modals.nameChannel')}</FormLabel>
             <FormControl.Feedback type="invalid">
               {formik.errors.name}
             </FormControl.Feedback>
             <Modal.Footer>
-              <Button variant="secondary" type="button" onClick={closeHandler}>modals.cancelButton</Button>
-              <Button variant="primary" type="submit" onClick={formik.handleSubmit}>modals.addButton</Button>
+              <Button variant="secondary" type="button" onClick={closeHandler}>{t('modals.cancelButton')}</Button>
+              <Button variant="primary" type="submit" onClick={formik.handleSubmit}>{t('modals.addButton')}</Button>
             </Modal.Footer>
           </FormGroup>
         </Form>

@@ -4,7 +4,7 @@ import { useFormik } from 'formik'
 // import leoProfanity from 'leo-profanity'
 // import * as yup from 'yup'
 // import { ArrowRightSquare } from 'react-bootstrap-icons'
-// import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 // import { toast } from 'react-toastify'
 
 import { useAuth, useChat } from '../../hooks/index.js'
@@ -13,7 +13,7 @@ const MessageForm = ({ activeChannel }) => {
   const { user } = useAuth()
   const chatApi = useChat()
   const messageRef = useRef(null)
-  // const { t } = useTranslation()
+  const { t } = useTranslation()
 
   // const validationSchema = yup.object().shape({
   //   message: yup.string().trim().required('Required'),
@@ -60,8 +60,8 @@ const MessageForm = ({ activeChannel }) => {
           <Form.Control
             name="body"
             ref={messageRef}
-            aria-label="newMessage"
-            placeholder="messageFormPlaceholder"
+            aria-label={t('newMessage')}
+            placeholder={t('messageFormPlaceholder')}
             className="border-0 p-0 ps-2"
             value={formik.values.body}
             onChange={formik.handleChange}
@@ -75,7 +75,7 @@ const MessageForm = ({ activeChannel }) => {
             onClick={formik.handleSubmit}
           >
             {/* <ArrowRightSquare size={20} /> */}
-            <span className="visually-show"> send </span>
+            <span className="visually-show">{t('send')}</span>
           </Button>
         </Form.Group>
       </Form>
