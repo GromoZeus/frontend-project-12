@@ -7,17 +7,12 @@ import axios from 'axios'
 import router from './Routes.jsx'
 import store, { actions } from '../slices/index.js'
 import { AuthContext, ChatContext } from '../contexts/index.jsx'
-import { useAuth } from '../hooks/index.jsx'
+import { useAuth } from '../hooks/index.js'
 import getPath from '../path.js'
 
 const ChatProvider = ({ children }) => {
   const auth = useAuth()
-  const {
-    addMessage,
-    addChannel,
-    deleteChannel,
-    channelRename,
-  } = actions
+  const { addMessage, addChannel, deleteChannel, channelRename } = actions
   const { dispatch } = store
 
   const socket = useMemo(() => io({
@@ -26,7 +21,6 @@ const ChatProvider = ({ children }) => {
   }), [])
 
   useEffect(() => {
-    // Подписываемся на события
     socket.on('connect', () => {
       console.log('Connected to server')
     })
@@ -47,7 +41,6 @@ const ChatProvider = ({ children }) => {
       dispatch(channelRename(payload))
     })
 
-    // Очистка при размонтировании
     return () => {
       socket.off('newMessage')
       socket.off('newChannel')
