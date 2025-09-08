@@ -5,7 +5,7 @@ import { Modal, FormGroup, FormControl, FormLabel, Button, Form } from 'react-bo
 import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
-// import { toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 import { useChat } from '../../hooks/index.js'
 import { actions } from '../../slices/index.js'
@@ -47,11 +47,10 @@ const ModalAddChannel = ({ closeHandler }) => {
         .then(({ id }) => { //                   УБРАТЬ СКОБКИ {}
           dispatch(setActualChannel(id))
           closeHandler()
-          // toast.success(t('toast.createChannel'))
+          toast.success(t('toast.createChannel'))
         })
-        .catch((error) => {
-          console.error(error)
-          // toast.error(t('toast.dataLoadingError'))
+        .catch(() => {
+          toast.error(t('toast.dataLoadingError'))
         })
     },
   })

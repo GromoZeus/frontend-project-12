@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Container } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
-// import { toast } from 'react-toastify';
+import { toast } from 'react-toastify'
 
 import fetchData from '../../thunk/fetchData.js'
 import { useAuth } from '../../hooks/index.js'
@@ -21,13 +21,12 @@ const ChatPage = () => {
     const fetchUserData = async () => {
       dispatch(fetchData(auth.getToken()))
         .unwrap()
-        .catch((e) => {
-          // toast.error(t('toast.аuthorisationError'));
-          console.error(e)
+        .catch(() => {
+          toast.error(t('toast.аuthorisationError'))
         })
     }
     fetchUserData()
-  }, [dispatch, auth])
+  }, [dispatch, auth, t])
 
   if (isLoading) {
     return (

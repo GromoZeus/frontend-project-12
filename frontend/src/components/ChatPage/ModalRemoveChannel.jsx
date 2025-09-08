@@ -1,7 +1,7 @@
 import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
-// import { toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 import { useChat } from '../../hooks/index.js'
 
@@ -13,11 +13,10 @@ const ModalRemoveChannel = ({ closeHandler, changed }) => {
     await chatApi.removeChannel(changed)
       .then(() => {
         closeHandler()
-        // toast.warn(t('toast.removeChannel'))
+        toast.warn(t('toast.removeChannel'))
       })
-      .catch((error) => {
-        console.error(error)
-        // toast.error(t('toast.dataLoadingError'))
+      .catch(() => {
+        toast.error(t('toast.dataLoadingError'))
       })
   }
   return (

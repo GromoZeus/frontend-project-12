@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import * as yup from 'yup'
 // import leoProfanity from 'leo-profanity'
-// import { toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 import { useChat } from '../../hooks/index.js'
 import { selectChannelsEntities } from '../../slices/channelsState.js'
@@ -47,11 +47,10 @@ const ModalRenameChanel = ({ closeHandler, changed }) => {
       await chatApi.renameChannel({ name: { name }, id: changed }) //                   УБРАТЬ СКОБКИ {}
         .then(() => {
           closeHandler()
-          // toast.info(t('toast.renamedChannel'))
+          toast.info(t('toast.renamedChannel'))
         })
-        .catch((error) => {
-          console.error(error)
-          // toast.error(t('toast.dataLoadingError'))
+        .catch(() => {
+          toast.error(t('toast.dataLoadingError'))
         })
     },
   })

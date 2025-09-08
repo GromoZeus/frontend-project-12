@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 import { io } from 'socket.io-client'
 import i18next from 'i18next'
 import { I18nextProvider, initReactI18next } from 'react-i18next'
+import { ToastContainer } from 'react-toastify'
 import axios from 'axios'
 import router from './Routes.jsx'
 import store, { actions } from '../slices/index.js'
@@ -175,15 +176,31 @@ const AuthProvider = ({ children }) => {
 const App = () => {
   return (
     <StrictMode>
-      <I18nextProvider i18n={i18n}>
-        <Provider store={store}>
-          <AuthProvider>
-            <ChatProvider>
-              <RouterProvider router={router} />
-            </ChatProvider>
-          </AuthProvider>
-        </Provider>
-      </I18nextProvider>
+      <div className="h-100">
+        <div className="d-flex flex-column h-100">
+          <I18nextProvider i18n={i18n}>
+            <Provider store={store}>
+              <AuthProvider>
+                <ChatProvider>
+                  <RouterProvider router={router} />
+                </ChatProvider>
+              </AuthProvider>
+            </Provider>
+          </I18nextProvider>
+        </div>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+      </div>
     </StrictMode>
   )
 }

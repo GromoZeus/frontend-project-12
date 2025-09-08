@@ -5,7 +5,7 @@ import { useFormik } from 'formik'
 // import * as yup from 'yup'
 // import { ArrowRightSquare } from 'react-bootstrap-icons'
 import { useTranslation } from 'react-i18next'
-// import { toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 import { useAuth, useChat } from '../../hooks/index.js'
 
@@ -42,8 +42,8 @@ const MessageForm = ({ activeChannel }) => {
         resetForm()
         messageRef.current.focus()
       }
-      catch (error) {
-        console.error('Ошибка отправки сообщения:', error)
+      catch {
+        toast.error(t('toast.dataLoadingError'))
       }
     },
     // validateOnChange: validationSchema,
