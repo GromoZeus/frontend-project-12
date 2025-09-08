@@ -4,7 +4,7 @@ import { Modal, FormGroup, FormControl, FormLabel, Button, Form } from 'react-bo
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import * as yup from 'yup'
-// import leoProfanity from 'leo-profanity'
+import leoProfanity from 'leo-profanity'
 import { toast } from 'react-toastify'
 
 import { useChat } from '../../hooks/index.js'
@@ -41,10 +41,8 @@ const ModalRenameChanel = ({ closeHandler, changed }) => {
     validationSchema: validationChannelsSchema(channelsName, t),
     onSubmit: async (values) => {
       const { name } = values
-      console.log(name)
-      console.log(changed)
-      // const cleanedName = leoProfanity.clean(name)
-      await chatApi.renameChannel({ name: { name }, id: changed }) //                   УБРАТЬ СКОБКИ {}
+      const cleanedName = leoProfanity.clean(name)
+      await chatApi.renameChannel({ name: { name: cleanedName }, id: changed })
         .then(() => {
           closeHandler()
           toast.info(t('toast.renamedChannel'))

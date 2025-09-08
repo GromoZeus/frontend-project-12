@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { useFormik } from 'formik'
-// import leoProfanity from 'leo-profanity'
+import leoProfanity from 'leo-profanity'
 import { Modal, FormGroup, FormControl, FormLabel, Button, Form } from 'react-bootstrap'
 import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux'
@@ -42,9 +42,9 @@ const ModalAddChannel = ({ closeHandler }) => {
     validationSchema: validationChannelsSchema(channelsName, t),
     onSubmit: async (values) => {
       const { name } = values
-      // const cleanedName = leoProfanity.clean(name)
-      await chatApi.newChannel({ name }) //                   УБРАТЬ СКОБКИ {}
-        .then(({ id }) => { //                   УБРАТЬ СКОБКИ {}
+      const cleanedName = leoProfanity.clean(name)
+      await chatApi.newChannel({ name: cleanedName })
+        .then(({ id }) => {
           dispatch(setActualChannel(id))
           closeHandler()
           toast.success(t('toast.createChannel'))

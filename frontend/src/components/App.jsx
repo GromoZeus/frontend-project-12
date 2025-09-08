@@ -1,3 +1,5 @@
+import 'react-toastify/dist/ReactToastify.css'
+
 import { StrictMode, useCallback, useMemo } from 'react'
 import { RouterProvider } from 'react-router-dom'
 import { useState, useEffect } from 'react'
@@ -5,6 +7,7 @@ import { Provider } from 'react-redux'
 import { io } from 'socket.io-client'
 import i18next from 'i18next'
 import { I18nextProvider, initReactI18next } from 'react-i18next'
+import leoProfanity from 'leo-profanity'
 import { ToastContainer } from 'react-toastify'
 import axios from 'axios'
 import router from './Routes.jsx'
@@ -23,6 +26,9 @@ await i18n
       ru: content,
     },
   })
+
+const ruDict = leoProfanity.getDictionary('ru')
+leoProfanity.add(ruDict)
 
 const ChatProvider = ({ children }) => {
   const auth = useAuth()

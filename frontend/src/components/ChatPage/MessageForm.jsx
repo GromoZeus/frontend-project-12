@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from 'react'
 import { Form, Button } from 'react-bootstrap'
 import { useFormik } from 'formik'
-// import leoProfanity from 'leo-profanity'
-// import * as yup from 'yup'
+import leoProfanity from 'leo-profanity'
+import * as yup from 'yup'
 // import { ArrowRightSquare } from 'react-bootstrap-icons'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -15,9 +15,9 @@ const MessageForm = ({ activeChannel }) => {
   const messageRef = useRef(null)
   const { t } = useTranslation()
 
-  // const validationSchema = yup.object().shape({
-  //   message: yup.string().trim().required('Required'),
-  // })
+  const validationSchema = yup.object().shape({
+    message: yup.string().trim().required('Required'),
+  })
 
   useEffect(() => {
     messageRef.current.focus()
@@ -28,10 +28,12 @@ const MessageForm = ({ activeChannel }) => {
       body: '',
     },
     onSubmit: async (values, { resetForm }) => {
-      if (!values.body.trim()) return
+      const cleanedMessage = leoProfanity.clean(values.body)
+
+      if (!cleanedMessage.trim()) return
 
       const message = {
-        text: values.body.trim(),
+        text: cleanedMessage.trim(),
         channelId: activeChannel.id,
         username: user,
       }
@@ -46,7 +48,7 @@ const MessageForm = ({ activeChannel }) => {
         toast.error(t('toast.dataLoadingError'))
       }
     },
-    // validateOnChange: validationSchema,
+    validateOnChange: validationSchema,
   })
 
   return (
