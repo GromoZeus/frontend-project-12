@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import axios from 'axios'
@@ -12,38 +12,64 @@ import { useAuth } from '../hooks/index.js'
 
 const SignupPage = () => {
   const [failedRegistration, setFailedRegistration] = useState(false)
-  const [submited, setSubmited] = useState(false)
+  const [submited, setIsSubmitting] = useState(false)
   const { t } = useTranslation()
   const usernameRef = useRef(null)
   const navigate = useNavigate()
   const location = useLocation()
   const auth = useAuth()
+
   useEffect(() => {
-    usernameRef.current.focus()
+    usernameRef.current?.focus()
   }, [])
 
-  const registrationValidation = yup.object().shape({
-    username: yup
-      .string()
-      .min(3, t('signUpPage.minUsernameLenght'))
-      .max(20, t('signUpPage.maxUsernameLenght'))
-      .trim()
-      .typeError(t('required'))
-      .required(t('required')),
-    password: yup
-      .string()
-      .trim()
-      .min(6, t('signUpPage.minPasswordLenght'))
-      .typeError(t('required'))
-      .required(t('required')),
-    confirmPassword: yup
-      .string()
-      .test(
-        'confirmPassword',
-        t('signUpPage.confirmPassword'),
-        (password, context) => password === context.parent.password,
-      ),
-  })
+  const registrationValidation = useCallback(() =>
+    yup.object().shape({
+      username: yup
+        .string()
+        .min(3, t('signUpPage.minUsernameLenght'))
+        .max(20, t('signUpPage.maxUsernameLenght'))
+        .trim()
+        .typeError(t('required'))
+        .required(t('required')),
+      password: yup
+        .string()
+        .trim()
+        .min(6, t('signUpPage.minPasswordLenght'))
+        .typeError(t('required'))
+        .required(t('required')),
+      confirmPassword: yup
+        .string()
+        .required(t('required'))
+        .oneOf([yup.ref('password')], t('signUpPage.confirmPassword')),
+    }), [t],
+  )
+
+  const handleSubmit = useCallback(async (values) => {
+    setFailedRegistration(false)
+    setIsSubmitting(true)
+
+    try {
+      const { username, password } = values
+      const { data } = await axios.post(getPath.signupPath(), { username, password })
+      localStorage.setItem('userId', JSON.stringify(data))
+      auth.login(data)
+      const { from } = location.state || { from: { pathname: getPath.chatPagePath() } }
+      navigate(from)
+    }
+    catch (err) {
+      if (err.response?.status === 409) {
+        setFailedRegistration(true)
+        usernameRef.current?.select()
+        return
+      }
+      console.error('Registration error:', err)
+      throw err
+    }
+    finally {
+      setIsSubmitting(false)
+    }
+  }, [auth, location.state, navigate])
 
   const formik = useFormik({
     initialValues: {
@@ -51,28 +77,8 @@ const SignupPage = () => {
       password: '',
       confirmPassword: '',
     },
-    validationSchema: registrationValidation,
-    onSubmit: async (values) => {
-      setFailedRegistration(false)
-      setSubmited(true)
-      try {
-        const { username, password } = values
-        const { data } = await axios.post(getPath.signupPath(), { username, password })
-        localStorage.setItem('userId', JSON.stringify(data))
-        auth.login(data)
-        const { from } = location.state || { from: { pathname: getPath.chatPagePath() } }
-        navigate(from)
-      }
-      catch (err) {
-        if (err.response.status === 409) {
-          setFailedRegistration(true)
-          usernameRef.current.select()
-          return
-        }
-        throw err
-      }
-      setSubmited(false)
-    },
+    validationSchema: registrationValidation(),
+    onSubmit: handleSubmit,
   })
 
   return (
