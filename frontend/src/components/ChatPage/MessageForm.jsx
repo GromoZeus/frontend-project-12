@@ -3,7 +3,6 @@ import { Form, Button } from 'react-bootstrap'
 import { useFormik } from 'formik'
 import leoProfanity from 'leo-profanity'
 import * as yup from 'yup'
-// import { ArrowRightSquare } from 'react-bootstrap-icons'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 
@@ -76,7 +75,6 @@ const MessageForm = ({ activeChannel }) => {
             disabled={formik.isSubmitting || !formik.values.body}
             onClick={formik.handleSubmit}
           >
-            {/* <ArrowRightSquare size={20} /> */}
             <span className="visually-show">{t('send')}</span>
           </Button>
         </Form.Group>

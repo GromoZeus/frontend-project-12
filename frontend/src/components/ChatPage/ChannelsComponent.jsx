@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react'
 import { Button, Nav } from 'react-bootstrap'
-// import { BsPlusSquare } from 'react-icons/bs'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
@@ -36,7 +35,6 @@ const ChannelsComponent = () => {
             className="p-0 text-primary"
             onClick={openAddChannelWindow}
           >
-            {/* <BsPlusSquare /> */}
             <span className="visually-show">+</span>
           </Button>
         </div>
