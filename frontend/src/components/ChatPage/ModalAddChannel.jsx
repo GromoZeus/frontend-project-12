@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useMemo, useCallback } from 'react'
 import { useFormik } from 'formik'
 import leoProfanity from 'leo-profanity'
 import { Modal, FormGroup, FormControl, FormLabel, Button, Form } from 'react-bootstrap'
@@ -11,48 +11,56 @@ import { useChat } from '../../hooks/index.js'
 import { actions } from '../../slices/index.js'
 import { selectChannelsEntities } from '../../slices/channelsState.js'
 
-const validationChannelsSchema = (channels, text) => yup.object().shape({
-  name: yup
-    .string()
-    .trim()
-    .required(text('required'))
-    .min(3, text('min'))
-    .max(20, text('max'))
-    .notOneOf(channels, text('duplicate')),
-})
-
 const ModalAddChannel = ({ closeHandler }) => {
   const { t } = useTranslation()
   const allChannels = useSelector(selectChannelsEntities)
   const chatApi = useChat()
-  const channelsName = Object.values(allChannels).map(channel => channel.name)
-
   const refContainer = useRef('')
   const { setActualChannel } = actions
   const dispatch = useDispatch()
 
+  const channelsName = useMemo(() =>
+    Object.values(allChannels).map(channel => channel.name),
+  [allChannels],
+  )
+
+  const validationSchema = useMemo(() =>
+    yup.object().shape({
+      name: yup
+        .string()
+        .trim()
+        .required(t('required'))
+        .min(3, t('min'))
+        .max(20, t('max'))
+        .notOneOf(channelsName, t('duplicate')),
+    }),
+  [t, channelsName],
+  )
+
   useEffect(() => {
-    refContainer.current.focus()
+    refContainer.current?.focus()
   }, [])
+
+  const handleSubmit = useCallback(async (values) => {
+    try {
+      const cleanedName = leoProfanity.clean(values.name)
+      const { id } = await chatApi.newChannel({ name: cleanedName })
+
+      dispatch(setActualChannel(id))
+      closeHandler()
+      toast.success(t('toast.createChannel'))
+    }
+    catch {
+      toast.error(t('toast.dataLoadingError'))
+    }
+  }, [chatApi, dispatch, setActualChannel, closeHandler, t])
 
   const formik = useFormik({
     initialValues: {
       name: '',
     },
-    validationSchema: validationChannelsSchema(channelsName, t),
-    onSubmit: async (values) => {
-      const { name } = values
-      const cleanedName = leoProfanity.clean(name)
-      await chatApi.newChannel({ name: cleanedName })
-        .then(({ id }) => {
-          dispatch(setActualChannel(id))
-          closeHandler()
-          toast.success(t('toast.createChannel'))
-        })
-        .catch(() => {
-          toast.error(t('toast.dataLoadingError'))
-        })
-    },
+    validationSchema,
+    onSubmit: handleSubmit,
   })
 
   return (

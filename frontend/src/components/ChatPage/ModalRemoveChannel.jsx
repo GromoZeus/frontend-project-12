@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Modal, Button } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -8,17 +8,27 @@ import { useChat } from '../../hooks/index.js'
 const ModalRemoveChannel = ({ closeHandler, changed }) => {
   const { t } = useTranslation()
   const chatApi = useChat()
+
+  const handleDeleteSuccess = useCallback(() => {
+    closeHandler()
+    toast.warn(t('toast.removeChannel'))
+  }, [closeHandler, t])
+
+  const handleDeleteError = useCallback(() => {
+    toast.error(t('toast.dataLoadingError'))
+  }, [t])
+
   const deleteChannel = async (e) => {
     e.preventDefault()
-    await chatApi.removeChannel(changed)
-      .then(() => {
-        closeHandler()
-        toast.warn(t('toast.removeChannel'))
-      })
-      .catch(() => {
-        toast.error(t('toast.dataLoadingError'))
-      })
+    try {
+      await chatApi.removeChannel(changed)
+      handleDeleteSuccess()
+    }
+    catch {
+      handleDeleteError()
+    }
   }
+
   return (
     <>
       <Modal.Header closeButton>

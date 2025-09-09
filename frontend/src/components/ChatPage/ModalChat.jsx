@@ -1,6 +1,7 @@
 import React from 'react'
 import { Modal } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
+
 import modalWindow from './ModalWindow.js'
 import { actions } from '../../slices/index.js'
 import { selectIsOpenedModal, selectTypeModal, selectChangedModal } from '../../slices/UIState.js'

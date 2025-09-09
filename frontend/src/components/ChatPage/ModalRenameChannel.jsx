@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useMemo, useCallback } from 'react'
 import { useFormik } from 'formik'
 import { Modal, FormGroup, FormControl, FormLabel, Button, Form } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
@@ -10,47 +10,68 @@ import { toast } from 'react-toastify'
 import { useChat } from '../../hooks/index.js'
 import { selectChannelsEntities } from '../../slices/channelsState.js'
 
-const validationChannelsSchema = (channels, text) => yup.object().shape({
-  name: yup
-    .string()
-    .trim()
-    .required(text('required'))
-    .min(3, text('min'))
-    .max(20, text('max'))
-    .notOneOf(channels, text('duplicate')),
-})
-
 const ModalRenameChanel = ({ closeHandler, changed }) => {
   const { t } = useTranslation()
   const refContainer = useRef('')
-  useEffect(() => {
-    setTimeout(() => {
-      refContainer.current.select()
-    }, 1)
-  }, [])
   const chatApi = useChat()
-
   const allChannels = useSelector(selectChannelsEntities)
-  const channelsName = Object.values(allChannels).map(channel => channel.name)
-  const channel = Object.values(allChannels).find(({ id }) => id === changed)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (refContainer.current) {
+        refContainer.current.select()
+      }
+    }, 1)
+
+    return () => clearTimeout(timer)
+  }, [])
+
+  const channel = useMemo(() =>
+    Object.values(allChannels).find(({ id }) => id === changed),
+  [allChannels, changed],
+  )
+
+  const channelsName = useMemo(() =>
+    Object.values(allChannels).map(channel => channel.name),
+  [allChannels],
+  )
+
+  const validationSchema = useMemo(() =>
+    yup.object().shape({
+      name: yup
+        .string()
+        .trim()
+        .required(t('required'))
+        .min(3, t('min'))
+        .max(20, t('max'))
+        .notOneOf(channelsName, t('duplicate')),
+    }),
+  [t, channelsName],
+  )
+
+  const handleSubmit = useCallback(async (values) => {
+    const { name } = values
+    const cleanedName = leoProfanity.clean(name)
+
+    try {
+      await chatApi.renameChannel({
+        name: { name: cleanedName },
+        id: changed,
+      })
+      closeHandler()
+      toast.info(t('toast.renamedChannel'))
+    }
+    catch {
+      toast.error(t('toast.dataLoadingError'))
+    }
+  }, [chatApi, changed, closeHandler, t])
 
   const formik = useFormik({
     initialValues: {
       name: channel.name,
     },
-    validationSchema: validationChannelsSchema(channelsName, t),
-    onSubmit: async (values) => {
-      const { name } = values
-      const cleanedName = leoProfanity.clean(name)
-      await chatApi.renameChannel({ name: { name: cleanedName }, id: changed })
-        .then(() => {
-          closeHandler()
-          toast.info(t('toast.renamedChannel'))
-        })
-        .catch(() => {
-          toast.error(t('toast.dataLoadingError'))
-        })
-    },
+    validationSchema,
+    onSubmit: handleSubmit,
   })
   return (
     <>
