@@ -1,5 +1,5 @@
 import { createSlice, createEntityAdapter } from '@reduxjs/toolkit'
-import channelsData from '../thunk/fetchData.js'
+import channelsData from '../thunk/index.js'
 
 const channelsAdapter = createEntityAdapter({
   selectId: channel => channel.id,
@@ -11,7 +11,7 @@ const channelsAdapter = createEntityAdapter({
 const slice = createSlice({
   name: 'channelsState',
   initialState: channelsAdapter.getInitialState({
-    loading: false,
+    // loading: false,
     // currentChannelId: defaultCurrentChannelId,
     // newChannelId: null, // дополнительное поле для нового канала
   }),
@@ -43,18 +43,18 @@ const slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(channelsData.pending, (state) => {
-        state.loading = true
-      })
+      // .addCase(channelsData.pending, (state) => {
+      //   state.loading = true
+      // })
       .addCase(channelsData.fulfilled, (state, { payload }) => {
-        state.loading = false
+        // state.loading = false
         channelsAdapter.setAll(state, payload.channels)
         // state.currentChannelId = payload.channels?.currentChannelId || defaultCurrentChannelId
         // state.newChannelId = null
       })
-      .addCase(channelsData.rejected, (state) => {
-        state.loading = false
-      })
+      // .addCase(channelsData.rejected, (state) => {
+      //   state.loading = false
+      // })
   },
 })
 
@@ -64,19 +64,7 @@ export const channelsSelectors = channelsAdapter.getSelectors(
   state => state.channelsState,
 )
 
-// Кастомные селекторы
 export const selectAllChannels = state => channelsSelectors.selectAll(state)
-// export const selectChannelById = (state, id) => channelsSelectors.selectById(state, id)
 export const selectChannelsEntities = state => channelsSelectors.selectEntities(state)
-// export const selectChannelsIds = state => channelsSelectors.selectIds(state)
-// export const selectChannelsTotal = state => channelsSelectors.selectTotal(state)
-
-// export const selectCurrentChannelId = state => state.channelsState.currentChannelId
-// export const selectCurrentChannel = (state) => {
-//   const currentId = selectCurrentChannelId(state)
-//   return currentId ? selectChannelById(state, currentId) : null
-// }
-export const selectChannelsLoading = state => state.channelsState.loading
-// export const selectNewChannelId = state => state.channelsState.newChannelId
 
 export default slice.reducer

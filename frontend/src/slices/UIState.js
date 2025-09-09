@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 import { actions as channelsStateActions } from './channelsState.js'
-import channelsData from '../thunk/fetchData.js'
+import channelsData from '../thunk/index.js'
 
 const initialState = {
   modal: {
@@ -9,6 +9,7 @@ const initialState = {
     type: null,
     extra: null,
   },
+  loading: false,
   currentChannelId: '1',
   defaultChannelId: '1',
 }
@@ -39,16 +40,23 @@ const slice = createSlice({
           state.currentChannelId = state.defaultChannelId
         }
       })
+      .addCase(channelsData.pending, (state) => {
+        state.loading = true
+      })
       .addCase(channelsData.fulfilled, (state) => {
+        state.loading = false
         state.currentChannelId = state?.currentChannelId || state.defaultChannelId
+      })
+      .addCase(channelsData.rejected, (state) => {
+        state.loading = false
       })
   },
 })
 
-// Кастомные селекторы
 export const selectIsOpenedModal = state => state.UIState.modal.isOpened
 export const selectTypeModal = state => state.UIState.modal.type
 export const selectChangedModal = state => state.UIState.modal.extra
+export const selectChannelsLoading = state => state.UIState.loading
 export const selectCurrentChannelId = state => state.UIState.currentChannelId
 
 export const { actions } = slice
