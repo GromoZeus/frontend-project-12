@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { AuthContext, ChatContext } from '../contexts/index.jsx'
+import { AuthContext, ChatContext } from '../contexts/index.js'
 
 const useAuth = () => useContext(AuthContext)
 const useChat = () => useContext(ChatContext)
