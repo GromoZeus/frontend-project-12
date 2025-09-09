@@ -10,6 +10,7 @@ import { I18nextProvider, initReactI18next } from 'react-i18next'
 import leoProfanity from 'leo-profanity'
 import { ToastContainer } from 'react-toastify'
 import axios from 'axios'
+
 import router from './Routes.jsx'
 import store, { actions } from '../slices/index.js'
 import { AuthContext, ChatContext } from '../contexts/index.js'
@@ -162,13 +163,7 @@ const AuthProvider = ({ children }) => {
   }, [logout])
 
   const valueData = useMemo(
-    () => ({
-      loggedin,
-      login,
-      logout,
-      getToken,
-      user,
-    }),
+    () => ({ loggedin, login, logout, getToken, user }),
     [loggedin, login, logout, getToken, user],
   )
 

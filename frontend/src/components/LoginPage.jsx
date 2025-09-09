@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux'
 import { useFormik } from 'formik'
 import { Button, Form, FloatingLabel, Container, Row, Col, Card } from 'react-bootstrap'
 import { useLocation, useNavigate, NavLink } from 'react-router-dom'
+
 import { actions } from '../slices/index.js'
 import { useAuth } from '../hooks/index.js'
 import getPath from '../path.js'
@@ -21,7 +22,7 @@ const LoginPage = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    inputRef.current.focus()
+    inputRef.current?.focus()
   }, [])
 
   const formik = useFormik({

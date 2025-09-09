@@ -1,4 +1,5 @@
 import { Navigate, useLocation } from 'react-router-dom'
+
 import { useAuth } from '../hooks/index.js'
 import ChatPage from './ChatPage/ChatPage.jsx'
 import getPath from '../path.js'
