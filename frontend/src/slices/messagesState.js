@@ -1,4 +1,5 @@
 import { createSlice, createEntityAdapter } from '@reduxjs/toolkit'
+
 import channelsData from '../thunk/index.js'
 import { actions as channelsStateActions } from './channelsState.js'
 
