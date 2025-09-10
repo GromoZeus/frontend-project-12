@@ -9,7 +9,7 @@ export default defineConfig({
           vendor: ['react', 'react-dom', 'react-router-dom', 'react-redux'],
           ui: ['react-bootstrap', 'bootstrap', 'react-toastify'],
           form: ['formik', 'yup'],
-          utils: ['axios', 'socket.io-client', 'leo-profanity', 'react-i18next', 'i18next'],
+          utils: ['axios', 'socket.io-client', 'leo-profanity', 'react-i18next', 'i18next', '@rollbar/react'],
         },
       },
     },
