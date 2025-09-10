@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 import getPath from '../path.js'
 
-const channelsData = createAsyncThunk(
+const chatData = createAsyncThunk(
   'initState/setState',
   async (token, { rejectWithValue }) => {
     try {
@@ -22,4 +22,4 @@ const channelsData = createAsyncThunk(
   },
 )
 
-export default channelsData
+export default chatData
