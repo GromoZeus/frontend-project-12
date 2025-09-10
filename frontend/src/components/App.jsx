@@ -4,6 +4,7 @@ import { StrictMode, useCallback, useMemo } from 'react'
 import { RouterProvider } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { Provider } from 'react-redux'
+import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react'
 import { io } from 'socket.io-client'
 import i18next from 'i18next'
 import { I18nextProvider, initReactI18next } from 'react-i18next'
@@ -17,6 +18,7 @@ import { AuthContext, ChatContext } from '../contexts/index.js'
 import { useAuth } from '../hooks/index.js'
 import getPath from '../path.js'
 import content from '../locales/content.js'
+import rollbarConfig from '../roollbar/index.js'
 
 const i18n = i18next.createInstance()
 await i18n
@@ -179,15 +181,19 @@ const App = () => {
     <StrictMode>
       <div className="h-100">
         <div className="d-flex flex-column h-100">
-          <I18nextProvider i18n={i18n}>
-            <Provider store={store}>
-              <AuthProvider>
-                <ChatProvider>
-                  <RouterProvider router={router} />
-                </ChatProvider>
-              </AuthProvider>
-            </Provider>
-          </I18nextProvider>
+          <RollbarProvider config={rollbarConfig}>
+            <ErrorBoundary>
+              <I18nextProvider i18n={i18n}>
+                <Provider store={store}>
+                  <AuthProvider>
+                    <ChatProvider>
+                      <RouterProvider router={router} />
+                    </ChatProvider>
+                  </AuthProvider>
+                </Provider>
+              </I18nextProvider>
+            </ErrorBoundary>
+          </RollbarProvider>
         </div>
         <ToastContainer
           position="top-right"
