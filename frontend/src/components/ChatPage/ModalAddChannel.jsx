@@ -43,7 +43,7 @@ const ModalAddChannel = ({ closeHandler }) => {
 
   const handleSubmit = useCallback(async (values) => {
     try {
-      const cleanedName = leoProfanity.clean(values.name)
+      const cleanedName = leoProfanity.clean(values.name.trim())
       const { id } = await chatApi.newChannel({ name: cleanedName })
 
       dispatch(setActualChannel(id))

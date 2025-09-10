@@ -51,7 +51,7 @@ const SignupPage = () => {
 
     try {
       const { username, password } = values
-      const { data } = await axios.post(getPath.signupPath(), { username, password })
+      const { data } = await axios.post(getPath.signupPath(), { username: username.trim(), password })
       localStorage.setItem('userId', JSON.stringify(data))
       auth.login(data)
       const { from } = location.state || { from: { pathname: getPath.chatPagePath() } }

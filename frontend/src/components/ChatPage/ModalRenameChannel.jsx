@@ -51,7 +51,7 @@ const ModalRenameChanel = ({ closeHandler, changed }) => {
 
   const handleSubmit = useCallback(async (values) => {
     const { name } = values
-    const cleanedName = leoProfanity.clean(name)
+    const cleanedName = leoProfanity.clean(name.trim())
 
     try {
       await chatApi.renameChannel({
