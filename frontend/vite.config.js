@@ -1,18 +1,15 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
 export default defineConfig({
   build: {
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          ui: ['react-bootstrap', 'bootstrap'],
+          vendor: ['react', 'react-dom', 'react-router-dom', 'react-redux'],
+          ui: ['react-bootstrap', 'bootstrap', 'react-toastify'],
           form: ['formik', 'yup'],
-          utils: ['axios'],
-          // utils: ['axios', 'lodash', 'leo-profanity'],
-          // Добавьте другие тяжелые библиотеки
+          utils: ['axios', 'socket.io-client', 'leo-profanity', 'react-i18next', 'i18next'],
         },
       },
     },
@@ -21,11 +18,9 @@ export default defineConfig({
   server: {
     port: 5002,
     proxy: {
-      // Проксируем запросы к API
       '/api': {
         target: 'http://localhost:5001',
       },
-      // Проксируем WebSocket соединения
       '/socket.io': {
         target: 'ws://localhost:5001',
         ws: true,
