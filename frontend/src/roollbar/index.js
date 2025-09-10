@@ -1,6 +1,8 @@
 const rollbarConfig = {
-  accessToken: '09273cd4bab547fcabc509b72e4b8277',
-  environment: 'testenv',
+  accessToken: '3743e65fadcc4da2bc600d8cd635347a',
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+  environment: 'production',
 }
 
 export default rollbarConfig
