@@ -161,7 +161,7 @@ const SignupPage = () => {
                     type="invalid"
                     className="invalid-feedback"
                   >
-                    {formik.errors.confirmPassword || 'signUpPage.existingUser'}
+                    {formik.errors.confirmPassword || t('signUpPage.existingUser')}
                   </Form.Control.Feedback>
                 </FormGroup>
                 <Button
