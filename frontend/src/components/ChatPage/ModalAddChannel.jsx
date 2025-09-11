@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo, useCallback } from 'react'
+import { useEffect, useRef, useMemo, useCallback } from 'react'
 import { useFormik } from 'formik'
 import leoProfanity from 'leo-profanity'
 import { Modal, FormGroup, FormControl, FormLabel, Button, Form } from 'react-bootstrap'

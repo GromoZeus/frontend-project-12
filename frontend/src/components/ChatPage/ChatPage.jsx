@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Container, Spinner } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'

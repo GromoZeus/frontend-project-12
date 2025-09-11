@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo, useCallback } from 'react'
+import { useRef, useEffect, useMemo, useCallback } from 'react'
 import { useFormik } from 'formik'
 import { Modal, FormGroup, FormControl, FormLabel, Button, Form } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'

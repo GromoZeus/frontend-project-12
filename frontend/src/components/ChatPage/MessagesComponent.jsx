@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo } from 'react'
+import { useEffect, useRef, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { selectChannelsEntities } from '../../slices/channelsState.js'
